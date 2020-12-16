@@ -13,11 +13,11 @@ namespace UnitTest
 		
 		TEST_METHOD(met_count_strs)
 		{
-			ifstream stream("r.txt");
 			int count = 0;
-			if (stream.is_open()) {
-				count = count_strs(stream);
-				stream.close();
+			FILE* fp;
+			if ((fp = fopen("r.txt", "r")) != NULL) {
+				count = count_strs(fp);
+				fclose(fp);
 			}
 			Assert::AreEqual(count, 2);
 		}

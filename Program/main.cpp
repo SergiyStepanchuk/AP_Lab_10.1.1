@@ -4,12 +4,12 @@
 #include <fstream>
 using namespace std;
 
-int count_strs(ifstream &stream) {
+int count_strs(FILE *stream) {
 	char tmp[11], *pos2, *pos;
 	int count = 0;
-	while (!stream.eof()) {
+	while (!feof(stream)) {
 		memset(tmp, 0, 11);
-		stream.read(tmp, 10);
+		fgets(tmp, 11, stream);
 		pos2 = tmp;
 		while (pos = strchr(pos2, ',')) {
 			if (pos - tmp < strlen(tmp) - 2) {
@@ -23,21 +23,22 @@ int count_strs(ifstream &stream) {
 			else break;
 		}
 		if (strlen(tmp) == 10)
-			stream.seekg(-2, ios_base::cur);
+			fseek(stream, -2, SEEK_CUR);
 	}
 	return count;
 }
 
 void main() {
-	string t;
+	char t[256];
 
 	cout << "Input filename: "; cin >> t;
 
-	ifstream stream(t);
-	if (stream.is_open()) {
-		cout << "Count strs in file: " << count_strs(stream);
-		stream.close();
+	FILE* fp;
+	if ((fp = fopen(t, "r")) != NULL) {
+		cout << "Count strs in file: " << count_strs(fp);
+		fclose(fp);
 	}
 	else cout << "Incorrect file name!";
+	
 	cout << endl;
 }
